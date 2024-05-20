@@ -2,8 +2,9 @@ import { Formik } from 'formik'
 import { View, Text, Image, StyleSheet, TextInput, Pressable } from 'react-native'
 import formSchema from '../../utils/FormValidation'
 import { Dispatch, SetStateAction } from 'react'
-import Animated, {  ZoomInLeft , ZoomOutLeft } from 'react-native-reanimated'
+import Animated, {  ZoomInDown , ZoomOutDown } from 'react-native-reanimated'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useAuth } from '../../utils/context/AuthContext'
 
 
 type AuthPropType ={
@@ -12,8 +13,17 @@ type AuthPropType ={
 
 const SignUp = ({setShowLogin}:AuthPropType) => {
 
-  const submitHandler = ()=>{
+  type formValueType ={
+    email:string ,
+    password:string , 
+    confirm:string ,
+  }
 
+  const {onRegister} = useAuth()
+  const submitHandler = (values:formValueType)=>{
+    if(onRegister){
+      onRegister(values.email , values.password)
+    }
   }
 
   const switchHandler = ()=>{
@@ -23,15 +33,14 @@ const SignUp = ({setShowLogin}:AuthPropType) => {
   return (
     <View   style={styles.container}>
         <Image style ={styles.image} source={require("../../public/images/autBG.jpg")} />
-        <Animated.View entering={ZoomInLeft.delay(20).duration(500)} exiting={ZoomOutLeft} style ={styles.formContainer}>
+        <Animated.View entering={ZoomInDown.delay(20).duration(500)} exiting={ZoomOutDown} style ={styles.formContainer}>
              <Text style={styles.header}>Registeration Form</Text>  
-
             <Formik
               initialValues={{email:"" , password:"" , confirm:""}}
               onSubmit={submitHandler}
               validationSchema={formSchema}
             >
-               {({ values, handleChange, errors }) => (
+               {({ values, handleChange, errors , handleSubmit}) => (
                 <View style ={styles.inputContainer}>
                       <View>
                          <TextInput 
@@ -63,9 +72,9 @@ const SignUp = ({setShowLogin}:AuthPropType) => {
                         <Text style={styles.errorStyle}>{errors.confirm}</Text>
                       </View>
                       <View style ={styles.buttonContainer}>
-                          <Pressable style={styles.submitButton} onPress={submitHandler}>
-                               <Text style={{color:"black", fontWeight:'bold'}}>Register</Text>
-                          </Pressable>
+                          <TouchableOpacity activeOpacity={.5}  style={styles.submitButton} onPress={()=>handleSubmit()}>
+                               <Text style={{color:"black", fontWeight:'bold'}}>Login</Text>
+                          </TouchableOpacity>
                           <TouchableOpacity onPress={switchHandler}>
                                <Text
                                 style={{color:"white", fontWeight:'bold' ,textDecorationLine:"underline"}}>

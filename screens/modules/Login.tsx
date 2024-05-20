@@ -1,7 +1,8 @@
 import { Formik } from 'formik'
 import { View, Text, Image, StyleSheet, TextInput, Pressable } from 'react-native'
 import { Dispatch, SetStateAction } from 'react'
-import Animated, {  ZoomInRight, ZoomOutRight } from 'react-native-reanimated'
+import Animated, {  ZoomInDown, ZoomOutDown } from 'react-native-reanimated'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 type AuthPropType ={
     setShowLogin: Dispatch<SetStateAction<boolean>>
@@ -10,25 +11,28 @@ type AuthPropType ={
 
 const Login = ({setShowLogin}:AuthPropType) => {
 
-
-  const submitHandler = ()=>{
-
+  type valueType ={
+    email:string , 
+    password:string
   }
 
+  const submitHandler = (values:valueType)=>{
+    console.log(values);
+  }
 
 
 
   return (
     <View   style={styles.container}>
         <Image style ={styles.image} source={require("../../public/images/autBG.jpg")} />
-        <Animated.View  entering={ZoomInRight.delay(20).duration(500)} exiting={ZoomOutRight} style ={styles.formContainer}>
-             <Text style={styles.header}>Registeration Form</Text>  
+        <Animated.View  entering={ZoomInDown.delay(20).duration(500)} exiting={ZoomOutDown} style ={styles.formContainer}>
+             <Text style={styles.header}>Login Form</Text>  
 
             <Formik
-              initialValues={{email:"" , password:"" , confirm:""}}
+              initialValues={{email:"" , password:"" }}
               onSubmit={submitHandler}
             >
-               {({ values, handleChange, errors }) => (
+               {({ values, handleChange , handleSubmit }) => (
                 <View style ={styles.inputContainer}>
                       <View>
                          <TextInput 
@@ -48,9 +52,9 @@ const Login = ({setShowLogin}:AuthPropType) => {
 
                       </View>
                       <View style ={styles.buttonContainer}>
-                          <Pressable style={styles.submitButton} onPress={submitHandler}>
+                          <TouchableOpacity activeOpacity={.5}  style={styles.submitButton} onPress={()=>handleSubmit()}>
                                <Text style={{color:"black", fontWeight:'bold'}}>Login</Text>
-                          </Pressable>
+                          </TouchableOpacity>
                           <Pressable onPress={()=>setShowLogin(false)} >
                                <Text style={{color:"white", fontWeight:'bold' ,textDecorationLine:"underline"}}>Don't have an account?</Text>
                           </Pressable>
